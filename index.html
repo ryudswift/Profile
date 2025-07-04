@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RyudSwift - Automation & Business Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+            color: #f5f5dc;
+        }
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            background-color: #1a1a1a;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        .animated-card {
+            background-color: #2c2c2c;
+            border: 1px solid #444;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .animated-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            border-color: #d2b48c;
+        }
+        .animated-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(210, 180, 140, 0.15), transparent);
+            transition: left 0.8s ease;
+        }
+        .animated-card:hover::before {
+            left: 100%;
+        }
+        /* Staggered animation delays */
+        .animated-card:nth-of-type(1) { animation-delay: 0.2s; }
+        .animated-card:nth-of-type(2) { animation-delay: 0.4s; }
+        .animated-card:nth-of-type(3) { animation-delay: 0.6s; }
+        .animated-card:nth-of-type(4) { animation-delay: 0.8s; }
+        .animated-card:nth-of-type(5) { animation-delay: 1.0s; }
+        .animated-card:nth-of-type(6) { animation-delay: 1.2s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            color: #d2b48c;
+        }
+        .highlight {
+            color: #d2b48c;
+            font-weight: 600;
+        }
+        .link {
+            color: #d2b48c;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .link:hover {
+            color: #fff;
+            text-shadow: 0 0 8px #d2b48c;
+        }
+        blockquote {
+            border-left: 4px solid #d2b48c;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #ccc;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #d2b48c;
+            color: #1a1a1a;
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(210, 180, 140, 0.3);
+            cursor: pointer;
+        }
+        .cta-button:hover {
+            background-color: #f5f5dc;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="particles-js"></div>
+    <div class="content-wrapper container mx-auto p-4 md:p-8 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-white">Hey, I'm RyudSwift 👋</h1>
+            <p class="text-lg text-gray-300 mt-2">Automation Specialist | Business Strategist | Tech Enthusiast</p>
+            <div class="mt-6">
+                <a href="https://ryudswift.github.io/Profile-Review/" target="_blank" rel="noopener noreferrer" class="cta-button">
+                    View My Reddit Legacy Project 🉐
+                </a>
+            </div>
+        </header>
+
+        <main class="space-y-8">
+            <!-- About Me -->
+            <section class="animated-card">
+                <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">👤</span> About Me</h2>
+                <p class="text-gray-300 leading-relaxed">
+                    I'm an <span class="highlight">automation specialist</span> and <span class="highlight">business strategist</span> passionate about bridging the gap between technology and real-world outcomes. My focus is on building efficient systems and workflows that solve actual problems, not just for the sake of automation itself.
+                </p>
+            </section>
+
+            <!-- What I'm Focused On -->
+            <section class="animated-card">
+                <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">🎯</span> What I'm Focused On</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-4">🤖</span>
+                        <div>
+                            <h3 class="font-semibold text-lg text-tan-500">Workflow Automation & Orchestration</h3>
+                            <p class="text-gray-400">Deep expertise in designing and implementing automation solutions, especially with tools like <span class="highlight">n8n</span>.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-4">📈</span>
+                        <div>
+                            <h3 class="font-semibold text-lg text-tan-500">SaaS Development & Business Strategy</h3>
+                            <p class="text-gray-400">Advising on lean GTM approaches and helping businesses identify and solve real customer challenges.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-4">🤝</span>
+                        <div>
+                            <h3 class="font-semibold text-lg text-tan-500">Community & Education</h3>
+                            <p class="text-gray-400">I believe in learning in public and sharing knowledge. I'm currently building resources to help others get started in automation.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Currently Learning -->
+            <section class="animated-card">
+                <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">🌱</span> I'm Currently Learning</h2>
+                <p class="text-gray-300">
+                    I'm always expanding my toolkit. Right now, my main focus is diving deeper into <span class="highlight">Python</span> to build more robust and scalable automation engines.
+                </p>
+            </section>
+
+            <!-- My Philosophy -->
+            <section class="animated-card">
+                <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">💡</span> My Philosophy</h2>
+                <p class="text-gray-300 mb-4">I approach problems with a mindset-first perspective. It's not just about the code; it's about asking the right questions.</p>
+                <blockquote>“Automation isn’t just about workflows, it’s about solving real business problems.”</blockquote>
+                <blockquote>“Start with the challenge/outcome… learning to share who you are as well and not be another bot in the industry of… 'Life.'”</blockquote>
+            </section>
+            
+            <!-- GitHub Stats -->
+            <section class="animated-card p-4">
+                 <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📊</span> My GitHub Stats</h2>
+                 <div class="flex justify-center">
+                    <img src="https://github-readme-stats.vercel.app/api?username=ryudswift&show_icons=true&theme=transparent&hide_border=true&title_color=d2b48c&text_color=f5f5dc&icon_color=d2b48c" alt="ryudswift's GitHub stats" class="max-w-full h-auto"/>
+                 </div>
+            </section>
+
+            <!-- Let's Connect -->
+            <section class="animated-card">
+                <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📫</span> Let's Connect</h2>
+                <p class="text-gray-300 mb-4">I'm always open to discussing new ideas, projects, or just chatting about the future of automation and SaaS.</p>
+                <div class="flex flex-col sm:flex-row sm:space-x-8 space-y-2 sm:space-y-0">
+                    <a href="https://www.reddit.com/user/ryudswift/" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>Reddit:</strong> u/RyudSwift</a>
+                    <a href="https://github.com/ryudswift" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>GitHub:</strong> ryudswift</a>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>&copy; 2024 RyudSwift. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#d2b48c" },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.2, "random": true, "anim": { "enable": false } },
+                    "size": { "value": 3, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#444", "opacity": 0.3, "width": 1 },
+                    "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }, "resize": true },
+                    "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } }
+                },
+                "retina_detect": true
+            });
+        });
+    </script>
+</body>
+</html>
