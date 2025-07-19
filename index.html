@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RyudSwift - v1.17 Multi-Theme</title>
+    <title>RyudSwift - v1.18 Multi-Theme</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,10 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* ---
-         * Changelog v1.17
-         * - Redesigned the theme switcher animation to expand vertically upwards.
-         * - Implemented a staggered, one-by-one reveal for the theme buttons over ~1.5 seconds.
-         * - Adjusted CSS transforms and transition delays for the new linear pop-out effect.
+         * Changelog v1.18
+         * - Redesigned the theme switcher animation to expand strictly vertically upwards.
+         * - Implemented a bouncy effect using a custom cubic-bezier timing function.
+         * - Adjusted transition delays for a sequential pop-out animation over approximately 1.5 seconds.
         --- */
 
         /* --- Theme Definitions --- */
@@ -283,7 +283,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid var(--bg-dark);
-            transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy transition */
             transform-origin: center right;
             opacity: 0;
         }
@@ -291,13 +291,13 @@
             opacity: 1;
         }
         
-        /* Staggered linear pop-out animation */
+        /* Staggered linear pop-out animation (upwards) */
         #theme-fab-container.open .theme-button:nth-child(1) { transform: translateY(-3.5rem); transition-delay: 0.0s; }
-        #theme-fab-container.open .theme-button:nth-child(2) { transform: translateY(-6.5rem); transition-delay: 0.1s; }
-        #theme-fab-container.open .theme-button:nth-child(3) { transform: translateY(-9.5rem); transition-delay: 0.2s; }
+        #theme-fab-container.open .theme-button:nth-child(2) { transform: translateY(-6.5rem); transition-delay: 0.15s; }
+        #theme-fab-container.open .theme-button:nth-child(3) { transform: translateY(-9.5rem); transition-delay: 0.3s; }
         #theme-fab-container.open .theme-button:nth-child(4) { transform: translateY(3.5rem); transition-delay: 0.0s; }
-        #theme-fab-container.open .theme-button:nth-child(5) { transform: translateY(6.5rem); transition-delay: 0.1s; }
-        #theme-fab-container.open .theme-button:nth-child(6) { transform: translateY(9.5rem); transition-delay: 0.2s; }
+        #theme-fab-container.open .theme-button:nth-child(5) { transform: translateY(6.5rem); transition-delay: 0.15s; }
+        #theme-fab-container.open .theme-button:nth-child(6) { transform: translateY(9.5rem); transition-delay: 0.3s; }
 
         .theme-button.active {
             transform: scale(1.2) !important;
