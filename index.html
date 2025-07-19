@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RyudSwift - v1.15 Multi-Theme</title>
+    <title>RyudSwift - v1.16 Multi-Theme</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,9 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* ---
-         * Changelog v1.15
-         * - Implemented a staggered, sequential pop-out animation for the theme switcher buttons.
-         * - Adjusted CSS transition delays to create a rapid, one-by-one reveal effect.
+         * Changelog v1.16
+         * - Added a "Refresh Stats" button to the GitHub Stats card for dynamic updates.
+         * - Implemented functionality to fetch and display "Top Languages" and "Wakatime" stats cards.
+         * - Added a loading animation and visual feedback during the stats refresh process.
+         * - Enhanced the stats section to be more interactive and comprehensive.
         --- */
 
         /* --- Theme Definitions --- */
@@ -290,7 +292,6 @@
             opacity: 1;
         }
         
-        /* Staggered pop-out animation */
         #theme-fab-container.open .theme-button:nth-child(1) { transform: translate(-4.5rem, 0); transition-delay: 0.0s; }
         #theme-fab-container.open .theme-button:nth-child(2) { transform: translate(-4rem, -2.5rem); transition-delay: 0.04s; }
         #theme-fab-container.open .theme-button:nth-child(3) { transform: translate(-4rem, 2.5rem); transition-delay: 0.08s; }
@@ -308,6 +309,28 @@
         #theme-original-blue { background-color: #1a1a1a; }
         #theme-ubuntu { background-color: #2c001e; }
         #theme-light-fruity { background-color: #FFF9F2; }
+
+        /* Stats Refresh Button & Loader */
+        .refresh-button {
+            background-color: var(--highlight-primary);
+            color: var(--bg-dark);
+            transition: all 0.3s ease;
+        }
+        .refresh-button:hover {
+            opacity: 0.8;
+        }
+        .loader {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--highlight-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
     </style>
 </head>
@@ -421,10 +444,16 @@
             </section>
             
             <!-- GitHub Stats -->
-            <section class="animated-card p-4">
-                 <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📊</span> My GitHub Stats</h2>
-                 <div class="flex justify-center" id="github-stats-container">
-                     <!-- GitHub stats image will be loaded here by script -->
+            <section id="stats-card" class="animated-card p-4">
+                 <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold flex items-center"><span class="icon">📊</span> My GitHub Stats</h2>
+                    <button id="refresh-stats-button" class="refresh-button font-bold py-2 px-4 rounded-full inline-flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 4l1.5 1.5A9 9 0 0120.5 10M20 20l-1.5-1.5A9 9 0 003.5 14" /></svg>
+                        <span>Refresh Stats</span>
+                    </button>
+                 </div>
+                 <div id="github-stats-container" class="flex flex-col items-center gap-4">
+                     <!-- GitHub stats images will be loaded here by script -->
                  </div>
             </section>
 
@@ -502,13 +531,24 @@
                 });
             }
             
-            function loadGitHubStats(theme) {
+            function loadGitHubStats(theme, showExtra = false) {
                 const container = document.getElementById('github-stats-container');
-                const statsUrl = `https://github-readme-stats.vercel.app/api?username=ryudswift&show_icons=true&hide_border=true&theme=${themes[theme].statsTheme}`;
-                container.innerHTML = `<img src="${statsUrl}" alt="ryudswift's GitHub stats" class="max-w-full h-auto"/>`;
+                const mainStatsUrl = `https://github-readme-stats.vercel.app/api?username=ryudswift&show_icons=true&hide_border=true&theme=${themes[theme].statsTheme}`;
+                
+                let extraStatsHtml = '';
+                if (showExtra) {
+                    const topLangsUrl = `https://github-readme-stats.vercel.app/api/top-langs/?username=ryudswift&layout=compact&hide_border=true&theme=${themes[theme].statsTheme}`;
+                    const wakatimeUrl = `https://github-readme-stats.vercel.app/api/wakatime?username=ryudswift&hide_border=true&theme=${themes[theme].statsTheme}`;
+                    extraStatsHtml = `
+                        <img src="${topLangsUrl}" alt="ryudswift's Top Languages" class="max-w-full h-auto mt-4"/>
+                        <img src="${wakatimeUrl}" alt="ryudswift's Wakatime stats" class="max-w-full h-auto mt-4"/>
+                    `;
+                }
+
+                container.innerHTML = `<img src="${mainStatsUrl}" alt="ryudswift's GitHub stats" class="max-w-full h-auto"/>${extraStatsHtml}`;
             }
 
-            function setTheme(themeName) {
+            function setTheme(themeName, showExtra) {
                 document.documentElement.className = themeName;
                 localStorage.setItem('ryudswift-theme', themeName);
 
@@ -517,7 +557,7 @@
                 });
                 
                 loadParticles(themeName);
-                loadGitHubStats(themeName);
+                loadGitHubStats(themeName, showExtra);
             }
 
             // --- Theme Switcher Logic ---
@@ -529,13 +569,14 @@
 
             document.querySelectorAll('.theme-button').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    setTheme(e.target.dataset.theme);
+                    const showExtra = document.getElementById('github-stats-container').children.length > 1;
+                    setTheme(e.target.dataset.theme, showExtra);
                     fabContainer.classList.remove('open');
                 });
             });
 
-            const savedTheme = localStorage.getItem('ryudswift-theme') || 'theme-pastel-terminal';
-            setTheme(savedTheme);
+            let savedTheme = localStorage.getItem('ryudswift-theme') || 'theme-pastel-terminal';
+            setTheme(savedTheme, false);
 
             // --- 3D Profile Badge Logic ---
             const badge = document.getElementById('github-profile-badge');
@@ -561,6 +602,17 @@
                     badge.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
                 });
             }
+
+            // --- Stats Refresh Logic ---
+            const refreshButton = document.getElementById('refresh-stats-button');
+            const statsContainer = document.getElementById('github-stats-container');
+            refreshButton.addEventListener('click', () => {
+                statsContainer.innerHTML = '<div class="loader"></div>';
+                setTimeout(() => {
+                    const currentTheme = document.documentElement.className;
+                    loadGitHubStats(currentTheme, true);
+                }, 1500); // Simulate loading time
+            });
         });
     </script>
 </body>
