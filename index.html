@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RyudSwift - v1.18 Multi-Theme</title>
+    <title>RyudSwift - v1.20 Multi-Theme</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,10 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* ---
-         * Changelog v1.18
-         * - Redesigned the theme switcher animation to expand strictly vertically upwards.
-         * - Implemented a bouncy effect using a custom cubic-bezier timing function.
-         * - Adjusted transition delays for a sequential pop-out animation over approximately 1.5 seconds.
+         * Changelog v1.20
+         * - Confirmed GitHub API fetch correctly populates the profile badge with live data.
+         * - Removed the lower "GitHub Stats" card and the "Refresh Stats" button for a cleaner UI.
+         * - Added a new, engaging Call-to-Action (CTA) section at the bottom of the page.
+         * - Implemented a smooth-scroll effect for the new CTA button to navigate to the "Connect" section.
         --- */
 
         /* --- Theme Definitions --- */
@@ -97,6 +98,9 @@
             --particle-line-color: #FFCCBC;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Ubuntu', sans-serif;
             background-color: var(--bg-dark);
@@ -291,7 +295,6 @@
             opacity: 1;
         }
         
-        /* Staggered linear pop-out animation (upwards) */
         #theme-fab-container.open .theme-button:nth-child(1) { transform: translateY(-3.5rem); transition-delay: 0.0s; }
         #theme-fab-container.open .theme-button:nth-child(2) { transform: translateY(-6.5rem); transition-delay: 0.15s; }
         #theme-fab-container.open .theme-button:nth-child(3) { transform: translateY(-9.5rem); transition-delay: 0.3s; }
@@ -309,6 +312,16 @@
         #theme-original-blue { background-color: #1a1a1a; }
         #theme-ubuntu { background-color: #2c001e; }
         #theme-light-fruity { background-color: #FFF9F2; }
+
+        /* --- Final CTA Section --- */
+        #final-cta {
+            border-color: var(--highlight-primary);
+            background-image: radial-gradient(circle at center, var(--bg-card) 0%, var(--bg-dark) 100%);
+        }
+        #cta-button-final {
+            background-color: var(--highlight-primary);
+            color: var(--bg-dark);
+        }
 
     </style>
 </head>
@@ -345,22 +358,22 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-4 w-full text-center">
                         <div>
                             <p class="text-sm text-muted">Followers</p>
-                            <p class="text-2xl font-bold highlight">15</p>
+                            <p id="followers-count" class="text-2xl font-bold highlight">--</p>
                         </div>
                         <div>
                             <p class="text-sm text-muted">Repositories</p>
-                            <p class="text-2xl font-bold highlight">25</p>
+                            <p id="repos-count" class="text-2xl font-bold highlight">--</p>
                         </div>
                         <div>
                             <p class="text-sm text-muted">Stars</p>
-                            <p class="text-2xl font-bold highlight">50</p>
+                            <p id="stars-count" class="text-2xl font-bold highlight">--</p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Let's Connect -->
-            <section class="animated-card">
+            <section id="connect" class="animated-card">
                 <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📫</span> Let's Connect</h2>
                 <p class="mb-4 text-muted">I'm always open to discussing new ideas, projects, or just chatting about the future of automation and SaaS.</p>
                 <div class="flex flex-col sm:flex-row sm:space-x-8 space-y-2 sm:space-y-0">
@@ -421,18 +434,15 @@
                 </p>
             </section>
             
-            <!-- GitHub Stats -->
-            <section id="stats-card" class="animated-card p-4">
-                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-bold flex items-center"><span class="icon">📊</span> My GitHub Stats</h2>
-                    <button id="refresh-stats-button" class="refresh-button font-bold py-2 px-4 rounded-full inline-flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 4l1.5 1.5A9 9 0 0120.5 10M20 20l-1.5-1.5A9 9 0 003.5 14" /></svg>
-                        <span>Refresh Stats</span>
-                    </button>
-                 </div>
-                 <div id="github-stats-container" class="flex flex-col items-center gap-4">
-                     <!-- GitHub stats images will be loaded here by script -->
-                 </div>
+            <!-- Final CTA Section -->
+            <section id="final-cta" class="animated-card text-center p-8">
+                <h2 class="text-3xl font-bold mb-4">Let's Build Something Awesome.</h2>
+                <p class="text-muted max-w-2xl mx-auto mb-6">
+                    Whether it's a complex automation, a new SaaS project, or just a question about tech, I'm always ready to connect and explore the possibilities.
+                </p>
+                <a href="#connect" id="cta-button-final" class="cta-button inline-block">
+                    Get in Touch
+                </a>
             </section>
 
         </main>
@@ -463,28 +473,22 @@
         document.addEventListener('DOMContentLoaded', function () {
             const themes = {
                 'theme-pastel-terminal': {
-                    particleColor: '#A48DFA', lineColor: '#403d52',
-                    statsTheme: 'catppuccin_dark&title_color=A48DFA&text_color=EAE6FF&icon_color=8DFAAF'
+                    particleColor: '#A48DFA', lineColor: '#403d52'
                 },
                 'theme-pastel-light': {
-                    particleColor: '#8A6DFF', lineColor: '#d1c6ff',
-                    statsTheme: 'default&title_color=8A6DFF&text_color=2C2A3A&icon_color=00C6AE'
+                    particleColor: '#8A6DFF', lineColor: '#d1c6ff'
                 },
                 'theme-fruity-catppuccin': {
-                    particleColor: '#F5C2E7', lineColor: '#45475A',
-                    statsTheme: 'catppuccin_mocha&title_color=F5C2E7&text_color=CDD6F4&icon_color=A6E3A1'
+                    particleColor: '#F5C2E7', lineColor: '#45475A'
                 },
                 'theme-original-blue': {
-                    particleColor: '#d2b48c', lineColor: '#444',
-                    statsTheme: 'transparent&hide_border=true&title_color=d2b48c&text_color=f5f5dc&icon_color=87ceeb'
+                    particleColor: '#d2b48c', lineColor: '#444'
                 },
                 'theme-ubuntu': {
-                    particleColor: '#E95420', lineColor: '#58334d',
-                    statsTheme: 'dark&title_color=E95420&text_color=f2f2f2&icon_color=dd4814'
+                    particleColor: '#E95420', lineColor: '#58334d'
                 },
                 'theme-light-fruity': {
-                    particleColor: '#FF7043', lineColor: '#FFCCBC',
-                    statsTheme: 'default&title_color=FF7043&text_color=5D4037&icon_color=FFCA28'
+                    particleColor: '#FF7043', lineColor: '#FFCCBC'
                 }
             };
 
@@ -509,24 +513,7 @@
                 });
             }
             
-            function loadGitHubStats(theme, showExtra = false) {
-                const container = document.getElementById('github-stats-container');
-                const mainStatsUrl = `https://github-readme-stats.vercel.app/api?username=ryudswift&show_icons=true&hide_border=true&theme=${themes[theme].statsTheme}`;
-                
-                let extraStatsHtml = '';
-                if (showExtra) {
-                    const topLangsUrl = `https://github-readme-stats.vercel.app/api/top-langs/?username=ryudswift&layout=compact&hide_border=true&theme=${themes[theme].statsTheme}`;
-                    const wakatimeUrl = `https://github-readme-stats.vercel.app/api/wakatime?username=ryudswift&hide_border=true&theme=${themes[theme].statsTheme}`;
-                    extraStatsHtml = `
-                        <img src="${topLangsUrl}" alt="ryudswift's Top Languages" class="max-w-full h-auto mt-4"/>
-                        <img src="${wakatimeUrl}" alt="ryudswift's Wakatime stats" class="max-w-full h-auto mt-4"/>
-                    `;
-                }
-
-                container.innerHTML = `<img src="${mainStatsUrl}" alt="ryudswift's GitHub stats" class="max-w-full h-auto"/>${extraStatsHtml}`;
-            }
-
-            function setTheme(themeName, showExtra) {
+            function setTheme(themeName) {
                 document.documentElement.className = themeName;
                 localStorage.setItem('ryudswift-theme', themeName);
 
@@ -535,7 +522,6 @@
                 });
                 
                 loadParticles(themeName);
-                loadGitHubStats(themeName, showExtra);
             }
 
             // --- Theme Switcher Logic ---
@@ -547,14 +533,13 @@
 
             document.querySelectorAll('.theme-button').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const showExtra = document.getElementById('github-stats-container').children.length > 1;
-                    setTheme(e.target.dataset.theme, showExtra);
+                    setTheme(e.target.dataset.theme);
                     fabContainer.classList.remove('open');
                 });
             });
 
             let savedTheme = localStorage.getItem('ryudswift-theme') || 'theme-pastel-terminal';
-            setTheme(savedTheme, false);
+            setTheme(savedTheme);
 
             // --- 3D Profile Badge Logic ---
             const badge = document.getElementById('github-profile-badge');
@@ -581,16 +566,36 @@
                 });
             }
 
-            // --- Stats Refresh Logic ---
-            const refreshButton = document.getElementById('refresh-stats-button');
-            const statsContainer = document.getElementById('github-stats-container');
-            refreshButton.addEventListener('click', () => {
-                statsContainer.innerHTML = '<div class="loader"></div>';
-                setTimeout(() => {
-                    const currentTheme = document.documentElement.className;
-                    loadGitHubStats(currentTheme, true);
-                }, 1500); // Simulate loading time
-            });
+            // --- Live GitHub Stats for Badge ---
+            async function fetchGitHubStats() {
+                try {
+                    // Fetch main user data for followers and repos
+                    const userResponse = await fetch('https://api.github.com/users/ryudswift');
+                    if (!userResponse.ok) throw new Error('Network response was not ok for user data.');
+                    const userData = await userResponse.json();
+                    
+                    // Fetch all repos to calculate total stars
+                    const reposResponse = await fetch(userData.repos_url);
+                    if (!reposResponse.ok) throw new Error('Network response was not ok for repos data.');
+                    const reposData = await reposResponse.json();
+                    const totalStars = reposData.reduce((acc, repo) => acc + repo.stargazers_count, 0);
+
+                    // Update the badge
+                    document.getElementById('followers-count').textContent = userData.followers;
+                    document.getElementById('repos-count').textContent = userData.public_repos;
+                    document.getElementById('stars-count').textContent = totalStars;
+
+                } catch (error) {
+                    console.error('Failed to fetch GitHub stats:', error);
+                    // Optionally, display an error message in the badge
+                    document.getElementById('followers-count').textContent = 'N/A';
+                    document.getElementById('repos-count').textContent = 'N/A';
+                    document.getElementById('stars-count').textContent = 'N/A';
+                }
+            }
+            
+            // Initial load of stats
+            fetchGitHubStats();
         });
     </script>
 </body>
