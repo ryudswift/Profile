@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RyudSwift - v1.10 Multi-Theme</title>
+    <title>RyudSwift - v1.12 Multi-Theme</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,11 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* ---
-         * Changelog v1.10
-         * - Applied the advanced 3D tilt and shine effect to the GitHub Profile Badge.
-         * - Updated JavaScript to control the new badge effects on mouse movement.
-         * - Merged and updated the 'Currently Learning' and 'Philosophy' sections with new content.
-         * - Ensured all new effects and content are compatible with all six themes.
+         * Changelog v1.12
+         * - Relocated the theme switcher FAB to the top-right corner of the viewport.
+         * - Redesigned the FAB animation to expand buttons downwards and to the left from the corner.
+         * - Ensured all theme options remain fully visible on-screen when expanded.
         --- */
 
         /* --- Theme Definitions --- */
@@ -185,12 +184,6 @@
             transition: color 0.3s ease, text-shadow 0.3s ease;
         }
         .link:hover { color: #fff; text-shadow: 0 0 8px var(--highlight-primary); }
-        blockquote {
-            border-left: 4px solid var(--highlight-primary);
-            padding-left: 1rem; margin: 1rem 0; font-style: italic;
-            color: var(--text-muted);
-            transition: border-color 0.5s ease, color 0.5s ease;
-        }
         
         .button-container { perspective: 1000px; }
         .cta-button {
@@ -218,6 +211,7 @@
         #github-profile-badge {
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
+            overflow: visible; /* Needed for hover effects */
         }
         #github-profile-badge .shine-overlay {
             position: absolute;
@@ -228,48 +222,90 @@
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
             pointer-events: none;
+            z-index: 2;
         }
         #github-profile-badge:hover .shine-overlay {
             opacity: 1;
         }
 
-        /* --- Theme Switcher --- */
-        .theme-switcher-container {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            background-color: var(--bg-card);
-            padding: 0.5rem;
-            border-radius: 1rem;
-            border: 1px solid var(--border-color);
-            z-index: 10;
+        /* --- Theme Switcher FAB --- */
+        #theme-fab-container {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 100;
         }
-        .theme-switcher-row {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-        }
-        .theme-button {
-            width: 1.5rem;
-            height: 1.5rem;
+        #theme-fab-toggle {
+            width: 3.5rem;
+            height: 3.5rem;
             border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.5s ease;
         }
-        .theme-button.active {
-            border-color: var(--highlight-secondary);
+        #theme-fab-toggle:hover {
             transform: scale(1.1);
         }
-        #theme-pastel-terminal { background-color: #211F2C; border: 2px solid #A48DFA; }
-        #theme-pastel-light { background-color: #F4F1FF; border: 2px solid #8A6DFF; }
-        #theme-fruity-catppuccin { background-color: #1E1E2E; border: 2px solid #F5C2E7; }
-        #theme-original-blue { background-color: #1a1a1a; border: 2px solid #d2b48c; }
-        #theme-ubuntu { background-color: #2c001e; border: 2px solid #E95420; }
-        #theme-light-fruity { background-color: #FFF9F2; border: 2px solid #FF7043; }
+        #theme-fab-container.open #theme-fab-toggle {
+            transform: rotate(45deg);
+        }
+        #theme-fab-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: var(--highlight-primary);
+            transition: color 0.5s ease;
+        }
+        #theme-fab-options {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 3.5rem;
+            height: 3.5rem;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+        #theme-fab-container.open #theme-fab-options {
+            pointer-events: auto;
+        }
+        .theme-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid var(--bg-dark);
+            transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            transform-origin: top right;
+            opacity: 0;
+        }
+        #theme-fab-container.open .theme-button {
+            opacity: 1;
+        }
+        /* Fan out the buttons in an arc from top-right */
+        #theme-fab-container.open .theme-button:nth-child(1) { transform: translate(0rem, 4.5rem); }
+        #theme-fab-container.open .theme-button:nth-child(2) { transform: translate(-2.5rem, 4rem); }
+        #theme-fab-container.open .theme-button:nth-child(3) { transform: translate(-4rem, 2.5rem); }
+        #theme-fab-container.open .theme-button:nth-child(4) { transform: translate(-4.5rem, 0rem); }
+        #theme-fab-container.open .theme-button:nth-child(5) { transform: translate(-4rem, -2.5rem); }
+        #theme-fab-container.open .theme-button:nth-child(6) { transform: translate(-2.5rem, -4rem); }
+
+        .theme-button.active {
+            transform: scale(1.2);
+            border-color: var(--highlight-secondary);
+        }
+        #theme-pastel-terminal { background-color: #211F2C; }
+        #theme-pastel-light { background-color: #F4F1FF; }
+        #theme-fruity-catppuccin { background-color: #1E1E2E; }
+        #theme-original-blue { background-color: #1a1a1a; }
+        #theme-ubuntu { background-color: #2c001e; }
+        #theme-light-fruity { background-color: #FFF9F2; }
 
     </style>
 </head>
@@ -277,20 +313,6 @@
     <div id="particles-js"></div>
 
     <div class="content-wrapper container mx-auto p-4 md:p-8 max-w-5xl">
-
-        <!-- Theme Switcher -->
-        <div class="theme-switcher-container">
-            <div class="theme-switcher-row">
-                <button id="theme-pastel-terminal" class="theme-button" data-theme="theme-pastel-terminal" title="Pastel Terminal"></button>
-                <button id="theme-pastel-light" class="theme-button" data-theme="theme-pastel-light" title="Pastel Light"></button>
-                <button id="theme-fruity-catppuccin" class="theme-button" data-theme="theme-fruity-catppuccin" title="Fruity Catppuccin"></button>
-            </div>
-            <div class="theme-switcher-row">
-                <button id="theme-original-blue" class="theme-button" data-theme="theme-original-blue" title="Original Blue"></button>
-                <button id="theme-ubuntu" class="theme-button" data-theme="theme-ubuntu" title="Ubuntu"></button>
-                <button id="theme-light-fruity" class="theme-button" data-theme="theme-light-fruity" title="Light & Fruity"></button>
-            </div>
-        </div>
 
         <!-- Header -->
         <header class="text-center mb-12 pt-16">
@@ -313,7 +335,7 @@
             <!-- GitHub Profile Card -->
             <section id="github-profile-badge" class="animated-card p-4">
                 <div class="shine-overlay"></div>
-                <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 relative z-10">
                     <div class="flex-shrink-0">
                         <img class="w-24 h-24 rounded-full border-2" style="border-color: var(--highlight-primary);" src="https://github.com/ryudswift.png" alt="RyudSwift GitHub Avatar" onerror="this.onerror=null;this.src='https://placehold.co/96x96/383549/EAE6FF?text=RS';">
                     </div>
@@ -331,6 +353,16 @@
                             <p class="text-2xl font-bold highlight">50</p>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- Let's Connect -->
+            <section class="animated-card">
+                <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📫</span> Let's Connect</h2>
+                <p class="mb-4 text-muted">I'm always open to discussing new ideas, projects, or just chatting about the future of automation and SaaS.</p>
+                <div class="flex flex-col sm:flex-row sm:space-x-8 space-y-2 sm:space-y-0">
+                    <a href="https://www.reddit.com/user/ryudswift/" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>Reddit:</strong> u/RyudSwift</a>
+                    <a href="https://github.com/ryudswift" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>GitHub:</strong> ryudswift</a>
                 </div>
             </section>
 
@@ -394,21 +426,28 @@
                  </div>
             </section>
 
-            <!-- Let's Connect -->
-            <section class="animated-card">
-                <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📫</span> Let's Connect</h2>
-                <p class="mb-4 text-muted">I'm always open to discussing new ideas, projects, or just chatting about the future of automation and SaaS.</p>
-                <div class="flex flex-col sm:flex-row sm:space-x-8 space-y-2 sm:space-y-0">
-                    <a href="https://www.reddit.com/user/ryudswift/" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>Reddit:</strong> u/RyudSwift</a>
-                    <a href="https://github.com/ryudswift" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>GitHub:</strong> ryudswift</a>
-                </div>
-            </section>
-
         </main>
 
         <footer class="text-center mt-12 text-sm text-muted">
             <p>&copy; 2024 RyudSwift. All rights reserved.</p>
         </footer>
+    </div>
+
+    <!-- Theme Switcher FAB -->
+    <div id="theme-fab-container">
+        <div id="theme-fab-options">
+            <button id="theme-pastel-terminal" class="theme-button" data-theme="theme-pastel-terminal" title="Pastel Terminal"></button>
+            <button id="theme-pastel-light" class="theme-button" data-theme="theme-pastel-light" title="Pastel Light"></button>
+            <button id="theme-fruity-catppuccin" class="theme-button" data-theme="theme-fruity-catppuccin" title="Fruity Catppuccin"></button>
+            <button id="theme-original-blue" class="theme-button" data-theme="theme-original-blue" title="Original Blue"></button>
+            <button id="theme-ubuntu" class="theme-button" data-theme="theme-ubuntu" title="Ubuntu"></button>
+            <button id="theme-light-fruity" class="theme-button" data-theme="theme-light-fruity" title="Light & Fruity"></button>
+        </div>
+        <button id="theme-fab-toggle">
+            <svg id="theme-fab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402a3.75 3.75 0 0 0-5.304-5.304L4.098 14.6c-.39.39-.39 1.023 0 1.414l.495.495a1.875 1.875 0 0 1 0 2.652l-.495.495a1.875 1.875 0 0 1-2.652 0l-.495-.495a1.875 1.875 0 0 1 0-2.652l6.402-6.401a3.75 3.75 0 0 0 5.304 5.304l-6.402 6.401a3.75 3.75 0 0 0-5.304 0Z" />
+            </svg>
+        </button>
     </div>
 
     <script>
@@ -479,9 +518,17 @@
                 loadGitHubStats(themeName);
             }
 
+            // --- Theme Switcher Logic ---
+            const fabContainer = document.getElementById('theme-fab-container');
+            const fabToggle = document.getElementById('theme-fab-toggle');
+            fabToggle.addEventListener('click', () => {
+                fabContainer.classList.toggle('open');
+            });
+
             document.querySelectorAll('.theme-button').forEach(button => {
                 button.addEventListener('click', (e) => {
                     setTheme(e.target.dataset.theme);
+                    fabContainer.classList.remove('open');
                 });
             });
 
