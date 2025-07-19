@@ -1,20 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="theme-pastel-terminal">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RyudSwift - Automation & Business Strategy</title>
+    <title>RyudSwift - v1.07 Multi-Theme</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #1a1a1a;
-            color: #f5f5dc;
+        /* --- Theme Definitions --- */
+        :root {
+            /* Default Theme: Pastel Terminal (Darker) */
+            --bg-dark: #211F2C;
+            --bg-card: #2A2739;
+            --text-main: #EAE6FF;
+            --text-muted: #b0a9d4;
+            --highlight-primary: #A48DFA;
+            --highlight-secondary: #8DFAAF;
+            --border-color: #403d52;
+            --shadow-color: rgba(0,0,0,0.2);
+            --particle-color: #A48DFA;
+            --particle-line-color: #403d52;
         }
+
+        .theme-pastel-light {
+            --bg-dark: #F4F1FF; /* Light Lavender White */
+            --bg-card: #FFFFFF;
+            --text-main: #2C2A3A; /* Deep Purple Text */
+            --text-muted: #5e5a7b;
+            --highlight-primary: #8A6DFF; /* Brighter Lavender */
+            --highlight-secondary: #00C6AE; /* Brighter Mint */
+            --border-color: #e0d9ff;
+            --shadow-color: rgba(0,0,0,0.1);
+            --particle-color: #8A6DFF;
+            --particle-line-color: #d1c6ff;
+        }
+
+        .theme-fruity-catppuccin {
+            --bg-dark: #1E1E2E; /* Catppuccin Mocha Base */
+            --bg-card: #181825;
+            --text-main: #CDD6F4; /* Text */
+            --text-muted: #A6ADC8; /* Subtext */
+            --highlight-primary: #F5C2E7; /* Pink */
+            --highlight-secondary: #A6E3A1; /* Green */
+            --border-color: #313244;
+            --shadow-color: rgba(0,0,0,0.2);
+            --particle-color: #F5C2E7;
+            --particle-line-color: #45475A;
+        }
+
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Ubuntu Mono', monospace;
+        }
+
         #particles-js {
             position: fixed;
             width: 100%;
@@ -22,28 +68,30 @@
             top: 0;
             left: 0;
             z-index: 0;
-            background-color: #1a1a1a;
+            background-color: var(--bg-dark);
+            transition: background-color 0.5s ease;
         }
         .content-wrapper {
             position: relative;
             z-index: 1;
         }
         .animated-card {
-            background-color: #2c2c2c;
-            border: 1px solid #444;
-            border-radius: 0.75rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
             padding: 1.5rem;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeIn 0.8s forwards;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.5s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 4px 4px 0px 0px var(--shadow-color);
         }
         .animated-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-            border-color: #d2b48c;
+            transform: translateY(-5px) translateX(-2px);
+            box-shadow: 6px 6px 0px 0px var(--shadow-color);
+            border-color: var(--highlight-primary);
         }
         .animated-card::before {
             content: '';
@@ -52,13 +100,14 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(210, 180, 140, 0.15), transparent);
+            background: linear-gradient(120deg, transparent, var(--highlight-primary), transparent);
+            opacity: 0.1;
             transition: left 0.8s ease;
         }
         .animated-card:hover::before {
             left: 100%;
         }
-        /* Staggered animation delays */
+        
         main > .animated-card:nth-of-type(1) { animation-delay: 0.2s; }
         main > .animated-card:nth-of-type(2) { animation-delay: 0.4s; }
         main > .animated-card:nth-of-type(3) { animation-delay: 0.6s; }
@@ -67,63 +116,107 @@
         main > .animated-card:nth-of-type(6) { animation-delay: 1.2s; }
         main > .animated-card:nth-of-type(7) { animation-delay: 1.4s; }
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        
         .icon {
             font-size: 1.5rem;
             margin-right: 0.75rem;
-            color: #d2b48c;
+            color: var(--highlight-secondary);
+            transition: color 0.5s ease;
         }
         .highlight {
-            color: #d2b48c;
-            font-weight: 600;
+            color: var(--highlight-primary);
+            font-weight: 700;
+            transition: color 0.5s ease;
         }
         .link {
-            color: #d2b48c;
+            color: var(--highlight-primary);
             transition: color 0.3s ease, text-shadow 0.3s ease;
         }
-        .link:hover {
-            color: #fff;
-            text-shadow: 0 0 8px #d2b48c;
-        }
+        .link:hover { color: #fff; text-shadow: 0 0 8px var(--highlight-primary); }
         blockquote {
-            border-left: 4px solid #d2b48c;
-            padding-left: 1rem;
-            margin: 1rem 0;
-            font-style: italic;
-            color: #ccc;
+            border-left: 4px solid var(--highlight-primary);
+            padding-left: 1rem; margin: 1rem 0; font-style: italic;
+            color: var(--text-muted);
+            transition: border-color 0.5s ease, color 0.5s ease;
         }
+        
+        .button-container { perspective: 1000px; }
         .cta-button {
             display: inline-block;
-            background-color: #d2b48c;
-            color: #1a1a1a;
+            color: var(--bg-dark);
+            font-family: 'Ubuntu Mono', monospace;
             font-weight: 700;
-            padding: 0.75rem 2rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px 0 rgba(210, 180, 140, 0.3);
             cursor: pointer;
+            background-image: linear-gradient(to right, var(--highlight-primary) 0%, var(--highlight-secondary) 51%, var(--highlight-primary) 100%);
+            background-size: 200% auto;
+            transition: all 0.3s ease-out;
+            transform-style: preserve-3d;
+            border: 1px solid rgba(0,0,0,0.2);
         }
         .cta-button:hover {
-            background-color: #f5f5dc;
-            transform: scale(1.05);
+            background-position: right center;
+            transform: scale(1.05) rotateX(10deg) rotateY(-5deg);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
         }
+
+        /* --- Theme Switcher --- */
+        .theme-switcher {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            background-color: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 99px;
+            border: 1px solid var(--border-color);
+            z-index: 10;
+        }
+        .theme-button {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+        .theme-button.active {
+            border-color: var(--highlight-secondary);
+        }
+        #theme-pastel-terminal { background-color: #211F2C; border-color: #A48DFA; }
+        #theme-pastel-light { background-color: #F4F1FF; border-color: #8A6DFF; }
+        #theme-fruity-catppuccin { background-color: #1E1E2E; border-color: #F5C2E7; }
+
     </style>
 </head>
 <body class="antialiased">
     <div id="particles-js"></div>
-    <div class="content-wrapper container mx-auto p-4 md:p-8 max-w-4xl">
+
+    <div class="content-wrapper container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Theme Switcher -->
+        <div class="theme-switcher">
+            <button id="theme-pastel-terminal" class="theme-button active" data-theme="theme-pastel-terminal" title="Pastel Terminal"></button>
+            <button id="theme-pastel-light" class="theme-button" data-theme="theme-pastel-light" title="Pastel Light"></button>
+            <button id="theme-fruity-catppuccin" class="theme-button" data-theme="theme-fruity-catppuccin" title="Fruity Catppuccin"></button>
+        </div>
+
         <!-- Header -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-white">Hey, I'm RyudSwift 👋</h1>
-            <p class="text-lg text-gray-300 mt-2">Automation Specialist | Business Strategist | Tech Enthusiast</p>
-            <div class="mt-6">
+        <header class="text-center mb-12 pt-16">
+            <h1 class="text-4xl md:text-5xl font-bold">Hey, I'm RyudSwift 👋</h1>
+            <p class="text-lg mt-2 text-muted">Automation Specialist | Business Strategist | Tech Enthusiast</p>
+            <div class="mt-8 flex flex-wrap justify-center items-center gap-4 button-container">
                 <a href="https://ryudswift.github.io/Profile-Review/" target="_blank" rel="noopener noreferrer" class="cta-button">
-                    View My Reddit Legacy Project 🉐
+                    Reddit Legacy Project 🉐
+                </a>
+                <a href="https://ryudswift.github.io/SuOS/" target="_blank" rel="noopener noreferrer" class="cta-button">
+                    SuOS Lead Gen Dash ⚡
+                </a>
+                <a href="https://ryudswift.github.io/devDash/" target="_blank" rel="noopener noreferrer" class="cta-button">
+                    WebDev Showcase 💻
                 </a>
             </div>
         </header>
@@ -133,19 +226,19 @@
             <section class="animated-card p-4">
                 <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
                     <div class="flex-shrink-0">
-                        <img class="w-24 h-24 rounded-full border-2 border-[#d2b48c]" src="https://github.com/ryudswift.png" alt="RyudSwift GitHub Avatar" onerror="this.style.display='none'">
+                        <img class="w-24 h-24 rounded-full border-2" style="border-color: var(--highlight-primary);" src="https://github.com/ryudswift.png" alt="RyudSwift GitHub Avatar" onerror="this.onerror=null;this.src='https://placehold.co/96x96/383549/EAE6FF?text=RS';">
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-4 w-full text-center">
                         <div>
-                            <p class="text-sm text-gray-400">Followers</p>
+                            <p class="text-sm text-muted">Followers</p>
                             <p class="text-2xl font-bold highlight">15</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Repositories</p>
+                            <p class="text-sm text-muted">Repositories</p>
                             <p class="text-2xl font-bold highlight">25</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Stars</p>
+                            <p class="text-sm text-muted">Stars</p>
                             <p class="text-2xl font-bold highlight">50</p>
                         </div>
                     </div>
@@ -155,7 +248,7 @@
             <!-- About Me -->
             <section class="animated-card">
                 <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">👤</span> About Me</h2>
-                <p class="text-gray-300 leading-relaxed">
+                <p class="leading-relaxed text-muted">
                     I'm an <span class="highlight">automation specialist</span> and <span class="highlight">business strategist</span> passionate about bridging the gap between technology and real-world outcomes. My focus is on building efficient systems and workflows that solve actual problems, not just for the sake of automation itself.
                 </p>
             </section>
@@ -167,22 +260,22 @@
                     <div class="flex items-start">
                         <span class="text-2xl mr-4">🤖</span>
                         <div>
-                            <h3 class="font-semibold text-lg text-tan-500">Workflow Automation & Orchestration</h3>
-                            <p class="text-gray-400">Deep expertise in designing and implementing automation solutions, especially with tools like <span class="highlight">n8n</span>.</p>
+                            <h3 class="font-semibold text-lg highlight">Workflow Automation & Orchestration</h3>
+                            <p class="text-muted">Deep expertise in designing and implementing automation solutions, especially with tools like <span class="highlight">n8n</span>.</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <span class="text-2xl mr-4">📈</span>
                         <div>
-                            <h3 class="font-semibold text-lg text-tan-500">SaaS Development & Business Strategy</h3>
-                            <p class="text-gray-400">Advising on lean GTM approaches and helping businesses identify and solve real customer challenges.</p>
+                            <h3 class="font-semibold text-lg highlight">SaaS Development & Business Strategy</h3>
+                            <p class="text-muted">Advising on lean GTM approaches and helping businesses identify and solve real customer challenges.</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <span class="text-2xl mr-4">🤝</span>
                         <div>
-                            <h3 class="font-semibold text-lg text-tan-500">Community & Education</h3>
-                            <p class="text-gray-400">I believe in learning in public and sharing knowledge. I'm currently building resources to help others get started in automation.</p>
+                            <h3 class="font-semibold text-lg highlight">Community & Education</h3>
+                            <p class="text-muted">I believe in learning in public and sharing knowledge. I'm currently building resources to help others get started in automation.</p>
                         </div>
                     </div>
                 </div>
@@ -191,7 +284,7 @@
             <!-- Currently Learning -->
             <section class="animated-card">
                 <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">🌱</span> I'm Currently Learning</h2>
-                <p class="text-gray-300">
+                <p class="text-muted">
                     I'm always expanding my toolkit. Right now, my main focus is diving deeper into <span class="highlight">Python</span> to build more robust and scalable automation engines.
                 </p>
             </section>
@@ -199,7 +292,7 @@
             <!-- My Philosophy -->
             <section class="animated-card">
                 <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">💡</span> My Philosophy</h2>
-                <p class="text-gray-300 mb-4">I approach problems with a mindset-first perspective. It's not just about the code; it's about asking the right questions.</p>
+                <p class="mb-4 text-muted">I approach problems with a mindset-first perspective. It's not just about the code; it's about asking the right questions.</p>
                 <blockquote>“Automation isn’t just about workflows, it’s about solving real business problems.”</blockquote>
                 <blockquote>“Start with the challenge/outcome… learning to share who you are as well and not be another bot in the industry of… 'Life.'”</blockquote>
             </section>
@@ -207,15 +300,15 @@
             <!-- GitHub Stats -->
             <section class="animated-card p-4">
                  <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📊</span> My GitHub Stats</h2>
-                 <div class="flex justify-center">
-                    <img src="https://github-readme-stats.vercel.app/api?username=ryudswift&show_icons=true&theme=transparent&hide_border=true&title_color=d2b48c&text_color=f5f5dc&icon_color=d2b48c" alt="ryudswift's GitHub stats" class="max-w-full h-auto"/>
+                 <div class="flex justify-center" id="github-stats-container">
+                     <!-- GitHub stats image will be loaded here by script -->
                  </div>
             </section>
 
             <!-- Let's Connect -->
             <section class="animated-card">
                 <h2 class="text-2xl font-bold mb-4 flex items-center"><span class="icon">📫</span> Let's Connect</h2>
-                <p class="text-gray-300 mb-4">I'm always open to discussing new ideas, projects, or just chatting about the future of automation and SaaS.</p>
+                <p class="mb-4 text-muted">I'm always open to discussing new ideas, projects, or just chatting about the future of automation and SaaS.</p>
                 <div class="flex flex-col sm:flex-row sm:space-x-8 space-y-2 sm:space-y-0">
                     <a href="https://www.reddit.com/user/ryudswift/" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>Reddit:</strong> u/RyudSwift</a>
                     <a href="https://github.com/ryudswift" target="_blank" rel="noopener noreferrer" class="link text-lg"><strong>GitHub:</strong> ryudswift</a>
@@ -224,30 +317,87 @@
 
         </main>
 
-        <footer class="text-center mt-12 text-gray-500 text-sm">
+        <footer class="text-center mt-12 text-sm text-muted">
             <p>&copy; 2024 RyudSwift. All rights reserved.</p>
         </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
-                    "color": { "value": "#d2b48c" },
-                    "shape": { "type": "circle" },
-                    "opacity": { "value": 0.2, "random": true, "anim": { "enable": false } },
-                    "size": { "value": 3, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#444", "opacity": 0.3, "width": 1 },
-                    "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }
+            let currentParticles = null;
+
+            const themes = {
+                'theme-pastel-terminal': {
+                    particleColor: '#A48DFA',
+                    lineColor: '#403d52',
+                    statsTheme: 'catppuccin_dark&title_color=A48DFA&text_color=EAE6FF&icon_color=8DFAAF'
                 },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }, "resize": true },
-                    "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } }
+                'theme-pastel-light': {
+                    particleColor: '#8A6DFF',
+                    lineColor: '#d1c6ff',
+                    statsTheme: 'default&title_color=8A6DFF&text_color=2C2A3A&icon_color=00C6AE'
                 },
-                "retina_detect": true
+                'theme-fruity-catppuccin': {
+                    particleColor: '#F5C2E7',
+                    lineColor: '#45475A',
+                    statsTheme: 'catppuccin_mocha&title_color=F5C2E7&text_color=CDD6F4&icon_color=A6E3A1'
+                }
+            };
+
+            function loadParticles(theme) {
+                if (window.pJSDom && window.pJSDom.length > 0) {
+                    window.pJSDom[0].pJS.fn.vendors.destroypJS();
+                    window.pJSDom = [];
+                }
+                
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                        "color": { "value": themes[theme].particleColor },
+                        "shape": { "type": "circle" },
+                        "opacity": { "value": 0.3, "random": true },
+                        "size": { "value": 3, "random": true },
+                        "line_linked": { "enable": true, "distance": 150, "color": themes[theme].lineColor, "opacity": 0.2, "width": 1 },
+                        "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }, "resize": true },
+                        "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } }
+                    },
+                    "retina_detect": true
+                });
+            }
+            
+            function loadGitHubStats(theme) {
+                const container = document.getElementById('github-stats-container');
+                const statsUrl = `https://github-readme-stats.vercel.app/api?username=ryudswift&show_icons=true&hide_border=true&theme=${themes[theme].statsTheme}`;
+                container.innerHTML = `<img src="${statsUrl}" alt="ryudswift's GitHub stats" class="max-w-full h-auto"/>`;
+            }
+
+            function setTheme(themeName) {
+                document.documentElement.className = themeName;
+                localStorage.setItem('ryudswift-theme', themeName);
+
+                // Update active button
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+                
+                loadParticles(themeName);
+                loadGitHubStats(themeName);
+            }
+
+            const themeSwitcher = document.querySelector('.theme-switcher');
+            themeSwitcher.addEventListener('click', (e) => {
+                if (e.target.classList.contains('theme-button')) {
+                    setTheme(e.target.dataset.theme);
+                }
             });
+
+            // Load saved theme or default
+            const savedTheme = localStorage.getItem('ryudswift-theme') || 'theme-pastel-terminal';
+            setTheme(savedTheme);
         });
     </script>
 </body>
